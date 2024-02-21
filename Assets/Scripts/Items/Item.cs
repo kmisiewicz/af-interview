@@ -6,11 +6,13 @@
 	[Serializable]
 	public class Item
 	{
-		[SerializeField] private string name;
+		[SerializeField] private string name = "";
 		[SerializeField] private int value;
 
-		public string Name => name;
+        public string Name => name;
 		public int Value => value;
+
+		public Item() { }
 
 		public Item(string name, int value)
 		{
@@ -18,9 +20,10 @@
 			this.value = value;
 		}
 
-		public void Use()
+		public virtual bool Use(InventoryController inventoryController)
 		{
-			Debug.Log("Using" + Name);
+			Debug.Log("Can't use basic item - " + Name);
+			return false;
 		}
 	}
 }

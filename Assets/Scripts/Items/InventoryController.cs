@@ -42,5 +42,26 @@
 		{
 			items.Add(item);
 		}
+
+		public void AddMoney(int value)
+		{
+			if (value > 0)
+			{
+				money += value;
+				OnMoneyChanged?.Invoke(money);
+			}
+		}
+
+		public void UseFirstUsableItem()
+		{
+			for (int i = 0; i < items.Count; i++)
+			{
+				if (items[i].Use(this))
+				{
+					items.RemoveAt(i);
+					return;
+				}
+			}
+		}
 	}
 }

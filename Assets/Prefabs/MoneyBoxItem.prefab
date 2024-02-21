@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1562054653796185208}
   - component: {fileID: 8426643071871308913}
   m_Layer: 3
-  m_Name: Item
+  m_Name: MoneyBoxItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 1329781387587706877}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -8.5, y: 0, z: 6.75}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 0.8, z: 1.2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8119570870960888954}
@@ -47,15 +47,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item:
-    rid: 3736484049123278849
+    rid: 3736484049123278848
   references:
     version: 2
     RefIds:
-    - rid: 3736484049123278849
-      type: {class: Item, ns: AFSInterview.Items, asm: Assembly-CSharp}
+    - rid: 3736484049123278848
+      type: {class: MoneyBoxItem, ns: AFSInterview.Items, asm: Assembly-CSharp}
       data:
-        name: Apple
-        value: 10
+        name: MoneyBox
+        value: 12
+        moneyReward: 100
 --- !u!65 &8426643071871308913
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -138,7 +139,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a63f19b0eef85944f90648a795e0958b, type: 2}
+  - {fileID: 2100000, guid: c828b2b1df5653646bd90b9af4ff99d2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

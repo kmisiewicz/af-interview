@@ -1,6 +1,7 @@
 ﻿namespace AFSInterview.Items
 {
     using System.Collections;
+    using System.Collections.Generic;
     using UnityEngine;
 	using UnityEngine.Pool;
 
@@ -9,7 +10,7 @@
 		[SerializeField] private InventoryController inventoryController;
 		[SerializeField] private int itemSellMaxValue;
 		[SerializeField] private Transform itemSpawnParent;
-		[SerializeField] private GameObject itemPrefab;
+		[SerializeField] private List<GameObject> itemPrefabs;
 		[SerializeField] private BoxCollider itemSpawnArea;
 		[SerializeField] private float itemSpawnInterval;
 		[SerializeField] private int itemPoolDefaultCapacity = 10;
@@ -71,6 +72,11 @@
             );
         }
 
+		private GameObject GetRandomPrefabToSpawn()
+		{
+            return itemPrefabs[Random.Range(0, itemPrefabs.Count)];
+		}
+
 		private void InitializeItemPool()
 		{
 			itemPool = new ObjectPool<GameObject>(CreatePooledItem, OnGetFromPool, OnReleaseToPool, OnDestroyPooledItem, 
@@ -79,7 +85,7 @@
 
 		private GameObject CreatePooledItem()
 		{
-			return Instantiate(itemPrefab, GetRandomSpawnPosition(), Quaternion.identity, itemSpawnParent);
+			return Instantiate(GetRandomPrefabToSpawn(), GetRandomSpawnPosition(), Quaternion.identity, itemSpawnParent);
         }
 
 		private void OnGetFromPool(GameObject go)
