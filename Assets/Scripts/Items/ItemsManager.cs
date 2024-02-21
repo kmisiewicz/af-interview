@@ -12,6 +12,14 @@
 		[SerializeField] private float itemSpawnInterval;
 
 		private float nextItemSpawnTime;
+		private Camera mainCamera;
+		private LayerMask itemsLayerMask;
+
+		private void Start ()
+		{
+			mainCamera = Camera.main;
+			itemsLayerMask = LayerMask.GetMask("Item");
+        }
 		
 		private void Update()
 		{
@@ -41,14 +49,14 @@
 
 		private void TryPickUpItem()
 		{
-			var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			var layerMask = LayerMask.GetMask("Item");
-			if (!Physics.Raycast(ray, out var hit, 100f, layerMask) || !hit.collider.TryGetComponent<IItemHolder>(out var itemHolder))
+			var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+			if (!Physics.Raycast(ray, out var hit, 100f, itemsLayerMask) || !hit.collider.TryGetComponent<IItemHolder>(out var itemHolder))
 				return;
 			
 			var item = itemHolder.GetItem(true);
             inventoryController.AddItem(item);
-            Debug.Log("Picked up " + item.Name + " with value of " + item.Value + " and now have " + inventoryController.ItemsCount + " items");
+
+            Debug.Log($"Picked up {item.Name} with value of {item.Value} and now have {inventoryController.ItemsCount} items");
 		}
 	}
 }
