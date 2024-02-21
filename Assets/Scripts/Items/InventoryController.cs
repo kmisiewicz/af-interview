@@ -21,7 +21,8 @@
 
         public void SellAllItemsUpToValue(int maxValue)
 		{
-			for (var i = items.Count - 1; i >= 0; i--)
+			int startItemsCount = items.Count;
+            for (var i = startItemsCount - 1; i >= 0; i--)
 			{
 				var itemValue = items[i].Value;
 				if (itemValue > maxValue)
@@ -31,7 +32,10 @@
 				items.RemoveAt(i);
 			}
 
-			OnMoneyChanged?.Invoke(money);
+			if (items.Count < startItemsCount)
+				OnMoneyChanged?.Invoke(money);
+
+			Debug.Log($"Sold {startItemsCount - items.Count} items worth up to {maxValue} each, remaining items: {items.Count}");
 		}
 
 		public void AddItem(Item item)
