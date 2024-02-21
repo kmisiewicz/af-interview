@@ -2,6 +2,7 @@
 {
     using System.Collections;
     using UnityEngine;
+	using UnityEngine.Pool;
 
     public class ItemsManager : MonoBehaviour
 	{
@@ -11,15 +12,20 @@
 		[SerializeField] private GameObject itemPrefab;
 		[SerializeField] private BoxCollider itemSpawnArea;
 		[SerializeField] private float itemSpawnInterval;
+		[SerializeField] private int itemPoolDefaultCapacity = 10;
+		[SerializeField] private int itemPoolMaxSize = 30;
+		[SerializeField] private int maxSpawnedItems = 50;
 
 		private Camera mainCamera;
 		private LayerMask itemsLayerMask;
+		private ObjectPool<GameObject> itemPool;
 
 		private void Start ()
 		{
 			mainCamera = Camera.main;
 			itemsLayerMask = LayerMask.GetMask("Item");
 
+			InitializeItemPool();
 			StartCoroutine(SpawnItems());
         }
 		
@@ -36,33 +42,63 @@
 		{
 			while (true)
 			{
-				SpawnNewItem();
+				if (itemPool.CountActive < maxSpawnedItems)
+					itemPool.Get();
 				yield return new WaitForSeconds(itemSpawnInterval);
 			}
 		}
 
-        private void SpawnNewItem()
-        {
+        private void TryPickUpItem()
+		{
+			var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+			if (!Physics.Raycast(ray, out var hit, 100f, itemsLayerMask) || !hit.collider.TryGetComponent(out IItemHolder itemHolder))
+				return;
+			
+			var item = itemHolder.GetItem(false);
+			itemPool.Release(hit.collider.gameObject);
+            inventoryController.AddItem(item);
+
+            Debug.Log($"Picked up {item.Name} with value of {item.Value} and now have {inventoryController.ItemsCount} items");
+		}
+
+		private Vector3 GetRandomSpawnPosition()
+		{
             var spawnAreaBounds = itemSpawnArea.bounds;
-            var position = new Vector3(
+			return new Vector3(
                 Random.Range(spawnAreaBounds.min.x, spawnAreaBounds.max.x),
                 0f,
                 Random.Range(spawnAreaBounds.min.z, spawnAreaBounds.max.z)
             );
-
-            Instantiate(itemPrefab, position, Quaternion.identity, itemSpawnParent);
         }
 
-        private void TryPickUpItem()
+		private void InitializeItemPool()
 		{
-			var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-			if (!Physics.Raycast(ray, out var hit, 100f, itemsLayerMask) || !hit.collider.TryGetComponent<IItemHolder>(out var itemHolder))
-				return;
-			
-			var item = itemHolder.GetItem(true);
-            inventoryController.AddItem(item);
+			itemPool = new ObjectPool<GameObject>(CreatePooledItem, OnGetFromPool, OnReleaseToPool, OnDestroyPooledItem, 
+				true, itemPoolDefaultCapacity, itemPoolMaxSize);
+		}
 
-            Debug.Log($"Picked up {item.Name} with value of {item.Value} and now have {inventoryController.ItemsCount} items");
+		private GameObject CreatePooledItem()
+		{
+			return Instantiate(itemPrefab, GetRandomSpawnPosition(), Quaternion.identity, itemSpawnParent);
+        }
+
+		private void OnGetFromPool(GameObject go)
+		{
+			go.transform.position = GetRandomSpawnPosition();
+			go.SetActive(true);
+		}
+
+		private void OnReleaseToPool(GameObject go)
+		{
+			go.SetActive(false);
+			Vector3 position = go.transform.position;
+			position.y = -10f;
+			go.transform.position = position;
+		}
+
+		private void OnDestroyPooledItem(GameObject go)
+		{
+			Destroy(go);
 		}
 	}
 }
