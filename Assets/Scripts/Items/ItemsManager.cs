@@ -1,9 +1,8 @@
 ﻿namespace AFSInterview.Items
 {
-	using TMPro;
-	using UnityEngine;
+    using UnityEngine;
 
-	public class ItemsManager : MonoBehaviour
+    public class ItemsManager : MonoBehaviour
 	{
 		[SerializeField] private InventoryController inventoryController;
 		[SerializeField] private int itemSellMaxValue;
@@ -24,8 +23,6 @@
 			
 			if (Input.GetKeyDown(KeyCode.Space))
 				inventoryController.SellAllItemsUpToValue(itemSellMaxValue);
-
-			FindObjectOfType<TextMeshProUGUI>().text = "Money: " + inventoryController.Money;
 		}
 
 		private void SpawnNewItem()

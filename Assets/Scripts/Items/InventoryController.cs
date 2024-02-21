@@ -1,10 +1,13 @@
 ﻿namespace AFSInterview.Items
 {
-	using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 	using UnityEngine;
 
 	public class InventoryController : MonoBehaviour
 	{
+		public event Action<int> OnMoneyChanged;
+
 		[SerializeField] private List<Item> items;
 		[SerializeField] private int money;
 
@@ -27,6 +30,8 @@
 				money += itemValue;
 				items.RemoveAt(i);
 			}
+
+			OnMoneyChanged?.Invoke(money);
 		}
 
 		public void AddItem(Item item)
