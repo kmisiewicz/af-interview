@@ -1,5 +1,6 @@
 ﻿namespace AFSInterview.Items
 {
+    using System.Collections;
     using UnityEngine;
 
     public class ItemsManager : MonoBehaviour
@@ -11,7 +12,6 @@
 		[SerializeField] private BoxCollider itemSpawnArea;
 		[SerializeField] private float itemSpawnInterval;
 
-		private float nextItemSpawnTime;
 		private Camera mainCamera;
 		private LayerMask itemsLayerMask;
 
@@ -19,13 +19,12 @@
 		{
 			mainCamera = Camera.main;
 			itemsLayerMask = LayerMask.GetMask("Item");
+
+			StartCoroutine(SpawnItems());
         }
 		
 		private void Update()
-		{
-			if (Time.time >= nextItemSpawnTime)
-				SpawnNewItem();
-			
+		{			
 			if (Input.GetMouseButtonDown(0))
 				TryPickUpItem();
 			
@@ -33,21 +32,28 @@
 				inventoryController.SellAllItemsUpToValue(itemSellMaxValue);
 		}
 
-		private void SpawnNewItem()
+		private IEnumerator SpawnItems()
 		{
-			nextItemSpawnTime = Time.time + itemSpawnInterval;
-			
-			var spawnAreaBounds = itemSpawnArea.bounds;
-			var position = new Vector3(
-				Random.Range(spawnAreaBounds.min.x, spawnAreaBounds.max.x),
-				0f,
-				Random.Range(spawnAreaBounds.min.z, spawnAreaBounds.max.z)
-			);
-			
-			Instantiate(itemPrefab, position, Quaternion.identity, itemSpawnParent);
+			while (true)
+			{
+				SpawnNewItem();
+				yield return new WaitForSeconds(itemSpawnInterval);
+			}
 		}
 
-		private void TryPickUpItem()
+        private void SpawnNewItem()
+        {
+            var spawnAreaBounds = itemSpawnArea.bounds;
+            var position = new Vector3(
+                Random.Range(spawnAreaBounds.min.x, spawnAreaBounds.max.x),
+                0f,
+                Random.Range(spawnAreaBounds.min.z, spawnAreaBounds.max.z)
+            );
+
+            Instantiate(itemPrefab, position, Quaternion.identity, itemSpawnParent);
+        }
+
+        private void TryPickUpItem()
 		{
 			var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 			if (!Physics.Raycast(ray, out var hit, 100f, itemsLayerMask) || !hit.collider.TryGetComponent<IItemHolder>(out var itemHolder))
