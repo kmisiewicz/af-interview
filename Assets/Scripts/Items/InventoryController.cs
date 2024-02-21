@@ -11,7 +11,12 @@
 		public int Money => money;
 		public int ItemsCount => items.Count;
 
-		public void SellAllItemsUpToValue(int maxValue)
+        private void Awake()
+        {
+            items ??= new List<Item>();
+        }
+
+        public void SellAllItemsUpToValue(int maxValue)
 		{
 			for (var i = items.Count - 1; i >= 0; i--)
 			{
