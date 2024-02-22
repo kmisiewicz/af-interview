@@ -37,6 +37,7 @@ namespace AFSInterview.UI
         {
             container.SetActive(true);
             finishMessage.gameObject.SetActive(false);
+            namesContainer.SetActive(true);
         }
 
         private void ShowAttackUI(Unit attacker, Unit target)
