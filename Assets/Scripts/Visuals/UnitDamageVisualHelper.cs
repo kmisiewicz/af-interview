@@ -7,7 +7,9 @@ namespace AFSInterview.Visuals
     public class UnitDamageVisualHelper : MonoBehaviour
     {
         const string DAMAGE_TINT_PARAM_NAME = "_DamageTintStrength";
+        const string DEATH_STRENGTH_PARAM_NAME = "_DeathNoiseStrength";
         private static readonly int DamageTintId = Shader.PropertyToID(DAMAGE_TINT_PARAM_NAME);
+        private static readonly int DeathStrengthId = Shader.PropertyToID(DEATH_STRENGTH_PARAM_NAME);
 
         [SerializeField] private Unit unit;
         [SerializeField] private Renderer unitRenderer;
@@ -20,6 +22,7 @@ namespace AFSInterview.Visuals
         private void Start ()
         {
             material = unitRenderer.material;
+            material.SetFloat(DeathStrengthId, 0f);
             unit.OnDamageTaken += VisualizeDamage;
             unit.OnDeath += OnUnitDeath;
         }
@@ -61,7 +64,14 @@ namespace AFSInterview.Visuals
 
         private IEnumerator AnimateDeath()
         {
-            yield return new WaitForSeconds(deathAnimationDuration);
+            float t = 0f;
+            while (t < deathAnimationDuration)
+            {
+                material.SetFloat(DeathStrengthId, Mathf.Lerp(0f, 1f, t / deathAnimationDuration));
+                t += Time.deltaTime;
+                yield return null;
+            }
+            material.SetFloat(DeathStrengthId, 1f);
 
             unit.gameObject.SetActive(false);
         }
