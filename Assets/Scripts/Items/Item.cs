@@ -22,7 +22,6 @@
 
 		public virtual bool Use(InventoryController inventoryController)
 		{
-			Debug.Log("Can't use basic item - " + Name);
 			return false;
 		}
 	}

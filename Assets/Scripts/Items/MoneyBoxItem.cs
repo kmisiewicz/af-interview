@@ -16,6 +16,7 @@ namespace AFSInterview.Items
         public override bool Use(InventoryController inventoryController)
         {
             inventoryController.AddMoney(moneyReward);
+            Debug.Log($"Used {Name} - received {moneyReward} money");
             return true;
         }
     }

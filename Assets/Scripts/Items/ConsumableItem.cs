@@ -20,6 +20,8 @@ namespace AFSInterview.Items
 
             var item = itemHolder.GetItem(false);
             inventoryController.AddItem(item);
+
+            Debug.Log($"Used {Name} - received {item.Name} with value {item.Value}");
             return true;
         }
     }
