@@ -28,7 +28,11 @@ namespace AFSInterview.Combat
             if (units != null)
             {
                 foreach (var unit in units)
-                    Destroy(unit.gameObject);
+                {
+                    if (unit != null)
+                        Destroy(unit.gameObject);
+                }
+                units.Clear();
             }
             else
             {
