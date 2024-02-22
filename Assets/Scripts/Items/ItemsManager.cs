@@ -16,6 +16,7 @@
 		[SerializeField] private int itemPoolDefaultCapacity = 10;
 		[SerializeField] private int itemPoolMaxSize = 30;
 		[SerializeField] private int maxSpawnedItems = 50;
+		[SerializeField] private int initialItemsToSpawn = 10;
 
 		private Camera mainCamera;
 		private LayerMask itemsLayerMask;
@@ -27,6 +28,7 @@
 			itemsLayerMask = LayerMask.GetMask("Item");
 
 			InitializeItemPool();
+
 			StartCoroutine(SpawnItems());
         }
 		
@@ -43,9 +45,10 @@
 		{
 			while (true)
 			{
+				yield return new WaitForSeconds(itemSpawnInterval);
+
 				if (itemPool.CountActive < maxSpawnedItems)
 					itemPool.Get();
-				yield return new WaitForSeconds(itemSpawnInterval);
 			}
 		}
 
@@ -81,6 +84,11 @@
 		{
 			itemPool = new ObjectPool<GameObject>(CreatePooledItem, OnGetFromPool, OnReleaseToPool, OnDestroyPooledItem, 
 				true, itemPoolDefaultCapacity, itemPoolMaxSize);
+
+			for (int i = 0; i < initialItemsToSpawn; i++)
+			{
+				itemPool.Get();
+			}
 		}
 
 		private GameObject CreatePooledItem()
