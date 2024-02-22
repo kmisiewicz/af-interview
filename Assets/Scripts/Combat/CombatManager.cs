@@ -87,11 +87,12 @@ namespace AFSInterview.Combat
                 yield break;
 
             OnAttack?.Invoke(attacker, unitToAttack);
-            yield return new WaitForSeconds(1f);
 
             int damage = attacker.GetDamageFor(unitToAttack);
-            Debug.Log($"{attacker.Name} --({damage})-> {unitToAttack.Name}");
             unitToAttack.TakeDamage(damage);
+            Debug.Log($"{attacker.Name} --({damage})-> {unitToAttack.Name}");
+
+            yield return new WaitForSeconds(1f);
         }
 
         private IEnumerator FinishCombat(Army winnerArmy)
