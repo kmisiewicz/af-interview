@@ -478,6 +478,7 @@ MonoBehaviour:
   itemPoolDefaultCapacity: 10
   itemPoolMaxSize: 30
   maxSpawnedItems: 50
+  initialItemsToSpawn: 10
 --- !u!1 &246198180
 GameObject:
   m_ObjectHideFlags: 0
@@ -7247,6 +7248,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1941736185}
+  - component: {fileID: 1941736186}
   m_Layer: 0
   m_Name: UnitReticleController
   m_TagString: Untagged
@@ -7269,6 +7271,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1941736186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941736184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b92152b1b78ada24ba7a9dd84f03eeef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combatManager: {fileID: 717833688}
+  attackerReticle: {fileID: 338771899}
+  targetReticle: {fileID: 1081789276}
+  highlightDuration: 0.7
 --- !u!1 &1991407253
 GameObject:
   m_ObjectHideFlags: 0
