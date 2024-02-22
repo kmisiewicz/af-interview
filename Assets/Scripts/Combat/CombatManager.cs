@@ -37,6 +37,8 @@ namespace AFSInterview.Combat
                 foreach (Army army in armies)
                     army.PrepareForNewTurn();
 
+                yield return new WaitForSeconds(0.5f);
+
                 allArmiesFinished = true;
                 Army army1 = armies[0];
                 Army army2 = armies[1];
@@ -60,7 +62,9 @@ namespace AFSInterview.Combat
                 {
                     yield return FinishCombat(army1);
                     break;
-                }                    
+                }
+
+                yield return new WaitForSeconds(0.5f);
             }
         }
 
@@ -83,8 +87,7 @@ namespace AFSInterview.Combat
                 yield break;
 
             OnAttack?.Invoke(attacker, unitToAttack);
-            // TODO: visualization
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
 
             int damage = attacker.GetDamageFor(unitToAttack);
             Debug.Log($"{attacker.Name} --({damage})-> {unitToAttack.Name}");
