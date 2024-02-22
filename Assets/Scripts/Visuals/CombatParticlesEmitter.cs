@@ -1,21 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace AFSInterview
+namespace AFSInterview.Visuals
 {
+    using UnityEngine;
+
     public class CombatParticlesEmitter : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
+        [SerializeField] private ParticleSystem particles;
+
+        public static CombatParticlesEmitter Instance => instance;
+
+        private static CombatParticlesEmitter instance;
+
+        private void Awake()
         {
-        
+            if (instance == null)
+                instance = this;
+            else
+                Destroy(this);
         }
 
-        // Update is called once per frame
-        void Update()
+        public void EmitAtPosition(Vector3 position, int particleCount = 30)
         {
-        
+            transform.position = position;
+            particles.Emit(particleCount);
         }
     }
 }

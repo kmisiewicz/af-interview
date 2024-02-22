@@ -36,6 +36,7 @@ namespace AFSInterview.Visuals
         {
             StopCoroutine(BlinkOnDamage());
             StartCoroutine(BlinkOnDamage());
+            CombatParticlesEmitter.Instance.EmitAtPosition(unit.transform.position, 30);
         }
 
         private IEnumerator BlinkOnDamage()
